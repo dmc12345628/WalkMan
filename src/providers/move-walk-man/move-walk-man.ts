@@ -1,5 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {DeviceMotion} from "@ionic-native/device-motion";
 
 @Injectable()
 export class MoveWalkManProvider {
@@ -7,11 +8,11 @@ export class MoveWalkManProvider {
   username: string = ''
   action: any = {
     direction: '',
-    date: ''
+    ts: ''
   }
+  accelerationSubscription: any
 
-  constructor(public http: HttpClient) {
-    console.log('Hello MoveWalkManProvider Provider');
+  constructor(public http: HttpClient, private deviceMotion: DeviceMotion) {
   }
 
   setUsername(username) {
@@ -23,7 +24,7 @@ export class MoveWalkManProvider {
     let jsonData = {"username": this.username, "type": direction};
 
     this.http.post(this.url, jsonData).subscribe(data => {
-      this.action.date = new Date(data['ts'])
+      this.action.ts = data['ts']
     }, err => {
       console.log(err)
     })
@@ -31,5 +32,19 @@ export class MoveWalkManProvider {
 
   getAction() {
     return this.action
+  }
+
+  getCurrentAcceleration() {
+    this.deviceMotion.getCurrentAcceleration()
+  }
+
+  watchAcceleration(callback) {
+    this.accelerationSubscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
+      callback(acceleration)
+    })
+  }
+
+  stopWatch() {
+    this.accelerationSubscription.unsubscribe()
   }
 }

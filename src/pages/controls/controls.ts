@@ -23,7 +23,7 @@ export class ControlsPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ControlsPage');
+    this.moveWal
   }
 
   onMove(direction) {
@@ -32,5 +32,14 @@ export class ControlsPage {
 
   getAction() {
     return this.moveWalkManProvider.getAction()
+  }
+
+  getDate(ts) {
+    if (typeof ts === 'number') {
+      let date = new Date(ts)
+      return date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds() + ' ' + date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear()
+    }
+    else
+      return ''
   }
 }

@@ -8,16 +8,40 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-icon [name]="item.icon" item-start></ion-icon>
-      {{item.title}}
-      <div class="item-note" item-end>
-        {{item.note}}
-      </div>
-    </button>
-  </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
+  <div padding>
+    <ion-segment [(ngModel)]="log">
+      <ion-segment-button value="timestamp">
+        Order by Timestamp
+      </ion-segment-button>
+      <ion-segment-button value="username">
+        Order by Username
+      </ion-segment-button>
+    </ion-segment>
   </div>
+
+  <div [ngSwitch]="log">
+    <ion-list *ngSwitchCase="'timestamp'">
+      <button ion-item *ngFor="let item of logOrderByTimestamp" (click)="itemTapped($event, item)">
+        <h2>{{item.username}}</h2>
+        <p>{{getDate(item.ts)}}</p>
+        <div class="item-note" item-end>
+          {{item.action}}
+        </div>
+      </button>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'username'">
+      <button ion-item *ngFor="let item of logOrderByUsername" (click)="itemTapped($event, item)">
+        <h2>{{item.username}}</h2>
+        <p>{{getDate(item.ts)}}</p>
+        <div class="item-note" item-end>
+          {{item.action}}
+        </div>
+      </button>
+    </ion-list>
+  </div>
+
+  <!--<div *ngIf="selectedItem" padding>
+    You navigated here from <b>{{selectedItem.title}}</b>
+  </div>-->
 </ion-content>

@@ -15,7 +15,7 @@
 
 <ion-content padding>
   <ion-label>{{username}} action : {{getAction().direction}}</ion-label>
-  <ion-label>Date : {{getAction().date}}</ion-label>
+  <ion-label>Date : {{getDate(getAction().ts)}}</ion-label>
 
   <ion-row justify-content-center>
     <button ion-button (click)="onMove('up')">

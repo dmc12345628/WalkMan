@@ -4,14 +4,17 @@ import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 
 import {MyApp} from './app.component';
 import {HomePage} from '../pages/home/home';
+import {LogPage} from "../pages/log/log";
 import {ControlsPage} from "../pages/controls/controls";
+
+import {MoveWalkManProvider} from '../providers/move-walk-man/move-walk-man';
+import {GetLogWalkManProvider} from '../providers/get-log-walk-man/get-log-walk-man';
 
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
-import {MoveWalkManProvider} from '../providers/move-walk-man/move-walk-man';
+
 import {HttpClientModule} from "@angular/common/http";
-import {LogPage} from "../pages/log/log";
-import { GetLogWalkManProvider } from '../providers/get-log-walk-man/get-log-walk-man';
+import {DeviceMotion} from "@ionic-native/device-motion";
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { GetLogWalkManProvider } from '../providers/get-log-walk-man/get-log-wal
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     MoveWalkManProvider,
-    GetLogWalkManProvider
+    GetLogWalkManProvider,
+    DeviceMotion,
   ]
 })
 export class AppModule {
