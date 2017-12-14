@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 import {MoveWalkManProvider} from "../../providers/move-walk-man/move-walk-man";
+import {DeviceMotionAccelerationData} from "@ionic-native/device-motion";
 
 /**
  * Generated class for the ControlsPage page.
@@ -16,14 +17,47 @@ import {MoveWalkManProvider} from "../../providers/move-walk-man/move-walk-man";
 })
 export class ControlsPage {
   username: string = ''
+  direction: string = ''
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private moveWalkManProvider: MoveWalkManProvider) {
+  constructor(public platform: Platform, public navCtrl: NavController, public navParams: NavParams, private moveWalkManProvider: MoveWalkManProvider) {
     this.username = navParams.get('username')
     this.moveWalkManProvider.setUsername(this.username)
   }
 
   ionViewDidLoad() {
-    this.moveWal
+    if (this.platform.is('android')) {
+      /*setInterval(() => {
+        this.moveWalkManProvider.getCurrentAcceleration(acceleration => {
+          console.log(acceleration)
+          let x = acceleration.x
+          let y = acceleration.y
+
+          if (y < 4)
+            this.onMove('up')
+          else if (y > 8)
+            this.onMove('down')
+          else if (x > 0)
+            this.onMove('left')
+          else
+            this.onMove('right')
+        })
+      }, 1000)*/
+
+      this.moveWalkManProvider.watchAcceleration(acceleration => {
+        let x = acceleration.x
+        let y = acceleration.y
+
+        if (y < 4)
+          this.onMove('up')
+        else if (y > 8)
+          this.onMove('down')
+        else if (x > 0)
+          this.onMove('left')
+        else
+          this.onMove('right')
+
+      })
+    }
   }
 
   onMove(direction) {

@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {DeviceMotion} from "@ionic-native/device-motion";
+import {DeviceMotion, DeviceMotionAccelerationData} from "@ionic-native/device-motion";
 
 @Injectable()
 export class MoveWalkManProvider {
@@ -11,6 +11,7 @@ export class MoveWalkManProvider {
     ts: ''
   }
   accelerationSubscription: any
+  actionInCours: boolean = false
 
   constructor(public http: HttpClient, private deviceMotion: DeviceMotion) {
   }
@@ -20,22 +21,35 @@ export class MoveWalkManProvider {
   }
 
   moveWalkMan(direction) {
-    this.action.direction = direction
-    let jsonData = {"username": this.username, "type": direction};
+    if (!this.actionInCours) {
+      this.actionInCours = true
+      this.action.direction = direction
+      let jsonData = {"username": this.username, "type": direction}
 
-    this.http.post(this.url, jsonData).subscribe(data => {
-      this.action.ts = data['ts']
-    }, err => {
-      console.log(err)
-    })
+      this.http.post(this.url, jsonData).subscribe(data => {
+        this.action.ts = data['ts']
+        setTimeout(() => {
+          this.actionInCours = false
+        }, 1000)
+      }, err => {
+        console.log(err)
+      })
+    }
   }
 
   getAction() {
     return this.action
   }
 
-  getCurrentAcceleration() {
-    this.deviceMotion.getCurrentAcceleration()
+  getCurrentAcceleration(callback) {
+    this.deviceMotion.getCurrentAcceleration().then(
+      (acceleration: DeviceMotionAccelerationData) => {
+        callback(acceleration)
+      },
+      (error: any) => {
+        console.log(error)
+      }
+    )
   }
 
   watchAcceleration(callback) {
